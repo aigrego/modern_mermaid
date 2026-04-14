@@ -1437,63 +1437,67 @@ const Preview = forwardRef<PreviewHandle, PreviewProps>(({ code, themeConfig, cu
         </div>
       )}
 
-       {/* 缩放和移动控制按钮 */}
-       <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
-         <button
-           onClick={handleZoomIn}
-          className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-md transition-colors cursor-pointer"
-           title={t.zoomIn}
-         >
-          <ZoomIn size={20} className="text-gray-700 dark:text-gray-300" />
-         </button>
-         <button
-           onClick={handleZoomOut}
-          className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-md transition-colors cursor-pointer"
-           title={t.zoomOut}
-         >
-          <ZoomOut size={20} className="text-gray-700 dark:text-gray-300" />
-         </button>
-         <button
-           onClick={handleResetZoom}
-          className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-md transition-colors cursor-pointer"
-           title={t.resetView}
-         >
-          <Target size={20} className="text-gray-700 dark:text-gray-300" />
-        </button>
-        <button
-          onClick={onToggleFullscreen}
-          className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-md transition-colors cursor-pointer"
-          title={isFullscreen ? t.exitFullscreen || '退出全屏' : t.enterFullscreen || '进入全屏'}
-        >
-          <Maximize2 size={20} className="text-gray-700 dark:text-gray-300" />
-         </button>
-        {onToggleEditor && (
-          <button
-            onClick={onToggleEditor}
-            className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-md transition-colors cursor-pointer"
-            title={showEditor ? t.hideEditor || 'Hide Editor' : t.showEditor || 'Show Editor'}
-          >
-            {showEditor ? (
-              <PanelLeftClose size={20} className="text-gray-700 dark:text-gray-300" />
-            ) : (
-              <PanelLeftOpen size={20} className="text-gray-700 dark:text-gray-300" />
+      {showEditor && (
+        <>
+          {/* 缩放和移动控制按钮 */}
+          <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
+            <button
+              onClick={handleZoomIn}
+              className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-md transition-colors cursor-pointer"
+              title={t.zoomIn}
+            >
+              <ZoomIn size={20} className="text-gray-700 dark:text-gray-300" />
+            </button>
+            <button
+              onClick={handleZoomOut}
+              className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-md transition-colors cursor-pointer"
+              title={t.zoomOut}
+            >
+              <ZoomOut size={20} className="text-gray-700 dark:text-gray-300" />
+            </button>
+            <button
+              onClick={handleResetZoom}
+              className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-md transition-colors cursor-pointer"
+              title={t.resetView}
+            >
+              <Target size={20} className="text-gray-700 dark:text-gray-300" />
+            </button>
+            <button
+              onClick={onToggleFullscreen}
+              className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-md transition-colors cursor-pointer"
+              title={isFullscreen ? t.exitFullscreen || '退出全屏' : t.enterFullscreen || '进入全屏'}
+            >
+              <Maximize2 size={20} className="text-gray-700 dark:text-gray-300" />
+            </button>
+            {onToggleEditor && (
+              <button
+                onClick={onToggleEditor}
+                className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-md transition-colors cursor-pointer"
+                title={showEditor ? t.hideEditor || 'Hide Editor' : t.showEditor || 'Show Editor'}
+              >
+                {showEditor ? (
+                  <PanelLeftClose size={20} className="text-gray-700 dark:text-gray-300" />
+                ) : (
+                  <PanelLeftOpen size={20} className="text-gray-700 dark:text-gray-300" />
+                )}
+              </button>
             )}
-          </button>
-        )}
-        <div className="p-2 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-md flex items-center justify-center" title={t.dragToMove}>
-          <Move size={16} className="text-gray-500 dark:text-gray-400" />
-         </div>
-       </div>
-       
-       {/* 缩放级别显示 */}
-      <div className="absolute bottom-4 left-4 px-3 py-1 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-md text-sm text-gray-700 dark:text-gray-300 z-20">
-         {Math.round(scale * 100)}%
-       </div>
-       
-       {/* 提示信息 */}
-      <div className="absolute bottom-4 right-4 px-3 py-1 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-md text-xs text-gray-600 dark:text-gray-400 z-20">
-         {t.scrollZoom} | {t.dragMove}
-       </div>
+            <div className="p-2 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-md flex items-center justify-center" title={t.dragToMove}>
+              <Move size={16} className="text-gray-500 dark:text-gray-400" />
+            </div>
+          </div>
+
+          {/* 缩放级别显示 */}
+          <div className="absolute bottom-4 left-4 px-3 py-1 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-md text-sm text-gray-700 dark:text-gray-300 z-20">
+            {Math.round(scale * 100)}%
+          </div>
+
+          {/* 提示信息 */}
+          <div className="absolute bottom-4 right-4 px-3 py-1 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-md text-xs text-gray-600 dark:text-gray-400 z-20">
+            {t.scrollZoom} | {t.dragMove}
+          </div>
+        </>
+      )}
        
        {/* SVG 内容容器 */}
        <div 
@@ -1505,13 +1509,13 @@ const Preview = forwardRef<PreviewHandle, PreviewProps>(({ code, themeConfig, cu
          <div 
            ref={contentRef}
            className="p-12"
-           onContextMenu={handleContextMenu}
-          onClick={() => {
+           onContextMenu={showEditor ? handleContextMenu : undefined}
+          onClick={showEditor ? () => {
             // 点击 Mermaid 图表时取消标注选择
             if (selectedAnnotationId && selectedTool === 'select') {
               setSelectedAnnotationId(null);
             }
-          }}
+          } : undefined}
            style={{
              transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
              transformOrigin: 'center',
@@ -1522,7 +1526,7 @@ const Preview = forwardRef<PreviewHandle, PreviewProps>(({ code, themeConfig, cu
          />
 
         {/* 取消选择的点击层 - 只捕获左键点击 */}
-        {selectedTool === 'select' && selectedAnnotationId && (
+        {showEditor && selectedTool === 'select' && selectedAnnotationId && (
           <div
             className="absolute inset-0 w-full h-full"
             style={{ pointerEvents: 'auto', cursor: 'default' }}
@@ -1551,24 +1555,26 @@ const Preview = forwardRef<PreviewHandle, PreviewProps>(({ code, themeConfig, cu
           }}
         >
           {/* 背景捕获层 - 在绘制模式下捕获绘制事件，在选择模式下捕获点击来取消选择 */}
-          <rect
-            x="0"
-            y="0"
-            width="100%"
-            height="100%"
-            fill="transparent"
-            style={{
-              pointerEvents: selectedTool !== null && selectedTool !== 'select' ? 'auto' : 'none',
-            }}
-            onMouseDown={(e) => {
-              if (selectedTool) {
-                // 在绘制模式下，处理绘制
-                handleAnnotationMouseDown(e);
-              }
-            }}
-            onMouseMove={handleAnnotationMouseMove}
-            onMouseUp={handleAnnotationMouseUp}
-          />
+          {showEditor && (
+            <rect
+              x="0"
+              y="0"
+              width="100%"
+              height="100%"
+              fill="transparent"
+              style={{
+                pointerEvents: selectedTool !== null && selectedTool !== 'select' ? 'auto' : 'none',
+              }}
+              onMouseDown={(e) => {
+                if (selectedTool) {
+                  // 在绘制模式下，处理绘制
+                  handleAnnotationMouseDown(e);
+                }
+              }}
+              onMouseMove={handleAnnotationMouseMove}
+              onMouseUp={handleAnnotationMouseUp}
+            />
+          )}
 
           <g
             transform={`translate(${containerRef.current ? containerRef.current.offsetWidth / 2 : 0}, ${containerRef.current ? containerRef.current.offsetHeight / 2 : 0})`}
@@ -1586,6 +1592,7 @@ const Preview = forwardRef<PreviewHandle, PreviewProps>(({ code, themeConfig, cu
                 selectedAnnotationId={selectedAnnotationId}
                 onSelectAnnotation={setSelectedAnnotationId}
                 onShowColorPicker={handleShowAnnotationColorPicker}
+                readOnly={!showEditor}
               />
 
               {/* 绘制中的实时预览 */}

@@ -14,6 +14,7 @@ interface AnnotationLayerProps {
   selectedAnnotationId: string | null;
   onSelectAnnotation: (id: string | null) => void;
   onShowColorPicker: (position: { x: number; y: number }) => void;
+  readOnly?: boolean;
 }
 
 const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
@@ -25,7 +26,8 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
   scale,
   selectedAnnotationId,
   onSelectAnnotation,
-  onShowColorPicker
+  onShowColorPicker,
+  readOnly
 }) => {
   const { t } = useLanguage();
   const [isDragging, setIsDragging] = useState(false);
@@ -45,6 +47,7 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
   // 选中标注
   const handleSelectAnnotation = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
+    if (readOnly) return;
     if (selectedTool === 'select' || selectedTool === null) {
       onSelectAnnotation(id);
     }
@@ -53,6 +56,7 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
   // 开始拖动
   const handleMouseDown = (e: React.MouseEvent, id: string, handle?: string) => {
     e.stopPropagation();
+    if (readOnly) return;
     if (selectedTool !== 'select' && selectedTool !== null) return;
     
     setIsDragging(true);
@@ -210,6 +214,7 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
   // 双击编辑文字
   const handleDoubleClick = (e: React.MouseEvent, annotation: Annotation) => {
     e.stopPropagation();
+    if (readOnly) return;
     if (annotation.type === 'text') {
       setEditingTextId(annotation.id);
       setEditingText(annotation.text);
@@ -327,7 +332,7 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
     const arrowSize = 12;
 
     return (
-      <g key={annotation.id} style={{ pointerEvents: 'auto' }}>
+      <g key={annotation.id} style={{ pointerEvents: readOnly ? 'none' : 'auto' }}>
         {/* 线条 */}
         <line
           x1={annotation.start.x}
@@ -337,9 +342,9 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
           stroke={annotation.color}
           strokeWidth={annotation.strokeWidth}
           strokeLinecap="round"
-          onMouseDown={(e) => handleMouseDown(e, annotation.id)}
-          onClick={(e) => handleSelectAnnotation(e, annotation.id)}
-          style={{ cursor: 'move' }}
+          onMouseDown={!readOnly ? (e) => handleMouseDown(e, annotation.id) : undefined}
+          onClick={!readOnly ? (e) => handleSelectAnnotation(e, annotation.id) : undefined}
+          style={{ cursor: readOnly ? 'default' : 'move' }}
           className={isSelected ? 'filter drop-shadow-lg' : ''}
         />
         
@@ -351,13 +356,13 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
             ${annotation.end.x - arrowSize * Math.cos(angle + Math.PI / 6)},${annotation.end.y - arrowSize * Math.sin(angle + Math.PI / 6)}
           `}
           fill={annotation.color}
-          onMouseDown={(e) => handleMouseDown(e, annotation.id)}
-          onClick={(e) => handleSelectAnnotation(e, annotation.id)}
-          style={{ cursor: 'move' }}
+          onMouseDown={!readOnly ? (e) => handleMouseDown(e, annotation.id) : undefined}
+          onClick={!readOnly ? (e) => handleSelectAnnotation(e, annotation.id) : undefined}
+          style={{ cursor: readOnly ? 'default' : 'move' }}
         />
         
         {/* 选中状态的可拖动控制点 */}
-        {isSelected && (
+        {!readOnly && isSelected && (
           <>
             <circle 
               cx={annotation.start.x} 
@@ -426,7 +431,7 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
     }
 
     return (
-      <g key={annotation.id} style={{ pointerEvents: 'auto' }}>
+      <g key={annotation.id} style={{ pointerEvents: readOnly ? 'none' : 'auto' }}>
         <text
           x={annotation.position.x}
           y={annotation.position.y}
@@ -436,16 +441,16 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
           fontFamily={annotation.fontFamily || 'Arial, sans-serif'}
           textAnchor="middle"
           dominantBaseline="middle"
-          onMouseDown={(e) => handleMouseDown(e, annotation.id)}
-          onClick={(e) => handleSelectAnnotation(e, annotation.id)}
-          onDoubleClick={(e) => handleDoubleClick(e, annotation)}
-          style={{ cursor: 'move', userSelect: 'none' }}
+          onMouseDown={!readOnly ? (e) => handleMouseDown(e, annotation.id) : undefined}
+          onClick={!readOnly ? (e) => handleSelectAnnotation(e, annotation.id) : undefined}
+          onDoubleClick={!readOnly ? (e) => handleDoubleClick(e, annotation) : undefined}
+          style={{ cursor: readOnly ? 'default' : 'move', userSelect: 'none' }}
           className={isSelected ? 'filter drop-shadow-lg' : ''}
         >
           {annotation.text}
         </text>
         
-        {isSelected && (
+        {!readOnly && isSelected && (
           <circle cx={annotation.position.x} cy={annotation.position.y} r="4" fill="#4F46E5" />
         )}
       </g>
@@ -459,7 +464,7 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
     const isSelected = selectedAnnotationId === annotation.id;
 
     return (
-      <g key={annotation.id} style={{ pointerEvents: 'auto' }}>
+      <g key={annotation.id} style={{ pointerEvents: readOnly ? 'none' : 'auto' }}>
         <rect
           x={annotation.position.x}
           y={annotation.position.y}
@@ -470,14 +475,14 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
           strokeWidth={annotation.strokeWidth}
           opacity={annotation.opacity}
           rx="4"
-          onMouseDown={(e) => handleMouseDown(e, annotation.id)}
-          onClick={(e) => handleSelectAnnotation(e, annotation.id)}
-          style={{ cursor: 'move' }}
+          onMouseDown={!readOnly ? (e) => handleMouseDown(e, annotation.id) : undefined}
+          onClick={!readOnly ? (e) => handleSelectAnnotation(e, annotation.id) : undefined}
+          style={{ cursor: readOnly ? 'default' : 'move' }}
           className={isSelected ? 'filter drop-shadow-lg' : ''}
         />
         
         {/* 选中状态的可拖动缩放控制点 */}
-        {isSelected && (
+        {!readOnly && isSelected && (
           <>
             {/* 左上角 */}
             <circle 
@@ -540,7 +545,7 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
     const isSelected = selectedAnnotationId === annotation.id;
 
     return (
-      <g key={annotation.id} style={{ pointerEvents: 'auto' }}>
+      <g key={annotation.id} style={{ pointerEvents: readOnly ? 'none' : 'auto' }}>
         <circle
           cx={annotation.center.x}
           cy={annotation.center.y}
@@ -549,14 +554,14 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
           stroke={annotation.color}
           strokeWidth={annotation.strokeWidth}
           opacity={annotation.opacity}
-          onMouseDown={(e) => handleMouseDown(e, annotation.id)}
-          onClick={(e) => handleSelectAnnotation(e, annotation.id)}
-          style={{ cursor: 'move' }}
+          onMouseDown={!readOnly ? (e) => handleMouseDown(e, annotation.id) : undefined}
+          onClick={!readOnly ? (e) => handleSelectAnnotation(e, annotation.id) : undefined}
+          style={{ cursor: readOnly ? 'default' : 'move' }}
           className={isSelected ? 'filter drop-shadow-lg' : ''}
         />
         
         {/* 选中状态的控制点 */}
-        {isSelected && (
+        {!readOnly && isSelected && (
           <>
             {/* 中心点 */}
             <circle 
@@ -592,7 +597,7 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
     const isSelected = selectedAnnotationId === annotation.id;
 
     return (
-      <g key={annotation.id} style={{ pointerEvents: 'auto' }}>
+      <g key={annotation.id} style={{ pointerEvents: readOnly ? 'none' : 'auto' }}>
         <line
           x1={annotation.start.x}
           y1={annotation.start.y}
@@ -601,14 +606,14 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
           stroke={annotation.color}
           strokeWidth={annotation.strokeWidth}
           strokeLinecap="round"
-          onMouseDown={(e) => handleMouseDown(e, annotation.id)}
-          onClick={(e) => handleSelectAnnotation(e, annotation.id)}
-          style={{ cursor: 'move' }}
+          onMouseDown={!readOnly ? (e) => handleMouseDown(e, annotation.id) : undefined}
+          onClick={!readOnly ? (e) => handleSelectAnnotation(e, annotation.id) : undefined}
+          style={{ cursor: readOnly ? 'default' : 'move' }}
           className={isSelected ? 'filter drop-shadow-lg' : ''}
         />
         
         {/* 选中状态的可拖动端点 */}
-        {isSelected && (
+        {!readOnly && isSelected && (
           <>
             <circle 
               cx={annotation.start.x} 
@@ -640,7 +645,7 @@ const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
 
   // 渲染工具栏按钮
   const renderDeleteButton = () => {
-    if (!selectedAnnotationId) return null;
+    if (readOnly || !selectedAnnotationId) return null;
     
     const annotation = annotations.find(a => a.id === selectedAnnotationId);
     if (!annotation) return null;

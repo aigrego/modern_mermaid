@@ -390,7 +390,7 @@ const Layout: React.FC = () => {
 
   return (
     <div className="h-screen overflow-hidden bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col font-sans transition-colors duration-200">
-      {!isFullscreen && <Header />}
+      {!isFullscreen && showEditor && <Header />}
       <main 
         className={`flex-1 flex flex-col md:flex-row overflow-hidden ${isFullscreen ? '' : ''}`}
       >
@@ -439,23 +439,25 @@ const Layout: React.FC = () => {
           className="bg-gray-50 dark:bg-gray-900 flex flex-col relative flex-1"
           style={{ width: isFullscreen ? '100%' : (showEditor ? `${100 - leftPanelWidth}%` : '100%') }}
         >
-           <div className="absolute top-4 right-4 z-10 flex items-start gap-2">
-              <Toolbar 
-                currentTheme={currentTheme} 
-                onThemeChange={handleThemeChange}
-                onDownload={handleDownload}
-                onCopy={handleCopy}
-                onShare={handleShare}
-                selectedBackground={selectedBackground.id}
-                onBackgroundChange={handleBackgroundChange}
-                selectedFont={selectedFont.id}
-                onFontChange={handleFontChange}
-                selectedTool={selectedTool}
-                onSelectTool={handleSelectTool}
-                onClearAnnotations={handleClearAnnotations}
-                annotationCount={annotationCount}
-              />
-           </div>
+           {showEditor && (
+             <div className="absolute top-4 right-4 z-10 flex items-start gap-2">
+                <Toolbar 
+                  currentTheme={currentTheme} 
+                  onThemeChange={handleThemeChange}
+                  onDownload={handleDownload}
+                  onCopy={handleCopy}
+                  onShare={handleShare}
+                  selectedBackground={selectedBackground.id}
+                  onBackgroundChange={handleBackgroundChange}
+                  selectedFont={selectedFont.id}
+                  onFontChange={handleFontChange}
+                  selectedTool={selectedTool}
+                  onSelectTool={handleSelectTool}
+                  onClearAnnotations={handleClearAnnotations}
+                  annotationCount={annotationCount}
+                />
+             </div>
+           )}
            <Preview 
              ref={previewRef} 
              code={code} 
