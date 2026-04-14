@@ -98,6 +98,10 @@ export interface Translation {
   enterFullscreen: string;
   exitFullscreen: string;
   
+  // Editor toggle
+  showEditor: string;
+  hideEditor: string;
+  
   // Cookie Consent
   cookieTitle: string;
   cookieMessage: string;
@@ -208,6 +212,10 @@ export const translations: Record<Language, Translation> = {
     enterFullscreen: 'Enter Fullscreen',
     exitFullscreen: 'Exit Fullscreen',
     
+    // Editor toggle
+    showEditor: 'Show Editor',
+    hideEditor: 'Hide Editor',
+    
     // Cookie Consent
     cookieTitle: 'We use cookies',
     cookieMessage: 'We use cookies and similar technologies to improve your experience, analyze site traffic, and personalize content. By clicking "Accept", you consent to our use of cookies.',
@@ -315,6 +323,10 @@ export const translations: Record<Language, Translation> = {
     // Fullscreen
     enterFullscreen: '进入全屏',
     exitFullscreen: '退出全屏',
+    
+    // Editor toggle
+    showEditor: '显示编辑器',
+    hideEditor: '隐藏编辑器',
     
     // Cookie Consent
     cookieTitle: '我们使用 Cookie',
@@ -424,6 +436,10 @@ export const translations: Record<Language, Translation> = {
     enterFullscreen: '進入全屏',
     exitFullscreen: '退出全屏',
     
+    // Editor toggle
+    showEditor: '顯示編輯器',
+    hideEditor: '隱藏編輯器',
+    
     // Cookie Consent
     cookieTitle: '我們使用 Cookie',
     cookieMessage: '我們使用 Cookie 和類似技術來改善您的體驗、分析網站流量並個性化內容。點擊"接受"即表示您同意我們使用 Cookie。',
@@ -531,6 +547,10 @@ export const translations: Record<Language, Translation> = {
     // Fullscreen
     enterFullscreen: '全画面表示',
     exitFullscreen: '全画面終了',
+    
+    // Editor toggle
+    showEditor: 'エディタを表示',
+    hideEditor: 'エディタを隠す',
     
     // Cookie Consent
     cookieTitle: 'Cookieの使用',
@@ -640,6 +660,10 @@ export const translations: Record<Language, Translation> = {
     enterFullscreen: 'Pantalla completa',
     exitFullscreen: 'Salir de pantalla completa',
     
+    // Editor toggle
+    showEditor: 'Mostrar editor',
+    hideEditor: 'Ocultar editor',
+    
     // Cookie Consent
     cookieTitle: 'Usamos cookies',
     cookieMessage: 'Utilizamos cookies y tecnologías similares para mejorar su experiencia, analizar el tráfico del sitio y personalizar el contenido. Al hacer clic en "Aceptar", usted acepta nuestro uso de cookies.',
@@ -747,6 +771,10 @@ export const translations: Record<Language, Translation> = {
     // Fullscreen
     enterFullscreen: 'Tela cheia',
     exitFullscreen: 'Sair da tela cheia',
+    
+    // Editor toggle
+    showEditor: 'Mostrar editor',
+    hideEditor: 'Ocultar editor',
     
     // Cookie Consent
     cookieTitle: 'Usamos cookies',

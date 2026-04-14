@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import mermaid from 'mermaid';
 import { toPng, toJpeg } from 'html-to-image';
-import { ZoomIn, ZoomOut, Maximize2, Move, Target } from 'lucide-react';
+import { ZoomIn, ZoomOut, Maximize2, Move, Target, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
 import type { ThemeConfig } from '../utils/themes';
 import type { BackgroundStyle } from '../utils/backgrounds';
 import type { FontOption } from '../utils/fonts';
@@ -24,6 +24,8 @@ interface PreviewProps {
   onAnnotationCountChange: (count: number) => void;
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
+  showEditor?: boolean;
+  onToggleEditor?: () => void;
 }
 
 export interface PreviewHandle {
@@ -40,7 +42,7 @@ mermaid.initialize({
   suppressErrorRendering: true, // 隐藏错误渲染到 DOM
 });
 
-const Preview = forwardRef<PreviewHandle, PreviewProps>(({ code, themeConfig, customBackground, customFont, onCodeChange, selectedTool, onSelectTool, onAnnotationCountChange, isFullscreen, onToggleFullscreen }, ref) => {
+const Preview = forwardRef<PreviewHandle, PreviewProps>(({ code, themeConfig, customBackground, customFont, onCodeChange, selectedTool, onSelectTool, onAnnotationCountChange, isFullscreen, onToggleFullscreen, showEditor, onToggleEditor }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [svg, setSvg] = useState<string>('');
@@ -1465,6 +1467,19 @@ const Preview = forwardRef<PreviewHandle, PreviewProps>(({ code, themeConfig, cu
         >
           <Maximize2 size={20} className="text-gray-700 dark:text-gray-300" />
          </button>
+        {onToggleEditor && (
+          <button
+            onClick={onToggleEditor}
+            className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-md transition-colors cursor-pointer"
+            title={showEditor ? t.hideEditor || 'Hide Editor' : t.showEditor || 'Show Editor'}
+          >
+            {showEditor ? (
+              <PanelLeftClose size={20} className="text-gray-700 dark:text-gray-300" />
+            ) : (
+              <PanelLeftOpen size={20} className="text-gray-700 dark:text-gray-300" />
+            )}
+          </button>
+        )}
         <div className="p-2 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-md flex items-center justify-center" title={t.dragToMove}>
           <Move size={16} className="text-gray-500 dark:text-gray-400" />
          </div>

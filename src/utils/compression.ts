@@ -35,6 +35,7 @@ export interface ShareParams {
   background?: string;
   font?: string;
   example?: string;
+  editor?: string;
 }
 
 export const generateShareURL = (params: ShareParams): string => {
@@ -64,6 +65,10 @@ export const generateShareURL = (params: ShareParams): string => {
   // 如果有 example，也添加（虽然通常 code 和 example 不会同时存在）
   if (params.example) {
     url.searchParams.set('example', params.example);
+  }
+  
+  if (params.editor) {
+    url.searchParams.set('editor', params.editor);
   }
   
   return url.toString();
@@ -105,6 +110,11 @@ export const parseShareURL = (): ShareParams | null => {
     const example = url.searchParams.get('example');
     if (example) {
       params.example = example;
+    }
+    
+    const editor = url.searchParams.get('editor');
+    if (editor) {
+      params.editor = editor;
     }
     
     // 如果有任何参数，返回结果

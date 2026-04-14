@@ -34,6 +34,7 @@ const Layout: React.FC = () => {
   const [annotationCount, setAnnotationCount] = useState<number>(0);
   const [leftPanelWidth, setLeftPanelWidth] = useState<number>(30); // 默认 30%
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showEditor, setShowEditor] = useState(true); // 默认显示编辑器
   const [showClearDialog, setShowClearDialog] = useState(false);
   const [showClearAnnotationsDialog, setShowClearAnnotationsDialog] = useState(false);
   const [loadedFromUrl, setLoadedFromUrl] = useState<boolean>(false); // 追踪是否从 URL 加载
@@ -216,6 +217,16 @@ const Layout: React.FC = () => {
     setIsFullscreen(newFullscreenState);
   };
 
+  const handleToggleEditor = () => {
+    const next = !showEditor;
+    setShowEditor(next);
+    // 追踪编辑器显隐切换
+    trackEvent('editor_toggle', {
+      show_editor: next,
+      theme: currentTheme
+    });
+  };
+
   // 主题更改处理
   const handleThemeChange = (theme: ThemeType) => {
     // 追踪主题更改
@@ -276,6 +287,14 @@ const Layout: React.FC = () => {
     const shareParams = parseShareURL();
     
     if (shareParams) {
+      // 分享链接默认隐藏编辑器，只有 editor=1 才显示
+      const isSharedLink = !!(shareParams.code || shareParams.example);
+      if (isSharedLink) {
+        setShowEditor(shareParams.editor === '1');
+      } else {
+        setShowEditor(true);
+      }
+      
       // 检查是否有自定义背景/字体
       const hasCustomStyles = !!(shareParams.background || shareParams.font);
       if (hasCustomStyles) {
@@ -376,7 +395,7 @@ const Layout: React.FC = () => {
         className={`flex-1 flex flex-col md:flex-row overflow-hidden ${isFullscreen ? '' : ''}`}
       >
         {/* Left Pane: Editor */}
-        {!isFullscreen && (
+        {!isFullscreen && showEditor && (
           <div 
             className="border-r border-gray-200 dark:border-gray-700 flex flex-col bg-white dark:bg-gray-800 shadow-sm z-10"
             style={{ width: `${leftPanelWidth}%` }}
@@ -413,12 +432,12 @@ const Layout: React.FC = () => {
         )}
         
         {/* 可拖动分割线 */}
-        {!isFullscreen && <ResizableDivider onResize={handleResize} />}
+        {!isFullscreen && showEditor && <ResizableDivider onResize={handleResize} />}
         
         {/* Right Pane: Preview */}
         <div 
           className="bg-gray-50 dark:bg-gray-900 flex flex-col relative flex-1"
-          style={{ width: isFullscreen ? '100%' : `${100 - leftPanelWidth}%` }}
+          style={{ width: isFullscreen ? '100%' : (showEditor ? `${100 - leftPanelWidth}%` : '100%') }}
         >
            <div className="absolute top-4 right-4 z-10 flex items-start gap-2">
               <Toolbar 
@@ -449,6 +468,8 @@ const Layout: React.FC = () => {
              onAnnotationCountChange={handleAnnotationCountChange}
              isFullscreen={isFullscreen}
              onToggleFullscreen={handleToggleFullscreen}
+             showEditor={showEditor}
+             onToggleEditor={handleToggleEditor}
            />
         </div>
       </main>
